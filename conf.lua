@@ -12,9 +12,10 @@ function love.conf(t)
   t.console = false -- Attach a console (boolean, Windows only)
   t.title = "BTEditor" -- The title of the window the game is in (string)
   t.author = "Bartoleo" -- The author of the game (string)
-  t.screen.fullscreen = false -- Enable fullscreen (boolean)
-  t.screen.vsync = true -- Enable vertical sync (boolean)
-  t.screen.fsaa = 0 -- The number of FSAA-buffers (number)
+  t.screen.flags = {}
+  t.screen.flags.fullscreen = false
+  t.screen.flags.vsync = true -- Enable vertical sync (boolean)
+  t.screen.flags.fsaa = 0 -- The number of FSAA-buffers (number)
   t.screen.width = 1024 -- The window width (number)
   t.screen.height = 768 -- The window height (number)
   t.version = "0.8.0" -- The LÖVE version this game was made for (number)

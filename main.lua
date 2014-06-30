@@ -17,7 +17,7 @@ require("lib/BTLua")
 require("lib/assetloader")
 
 if images.icon then
-  love.graphics.setIcon( images.icon )
+  love.window.setIcon( images.icon:getData() )
 end
 
 --profiler = require "profiler"
@@ -27,7 +27,7 @@ function love.load()
   -- Set filesystem identity
   love.filesystem.setIdentity(game_id)
 
-  love.graphics.setCaption(game_title.." v."..game_version)
+  love.window.setTitle(game_title.." v."..game_version)
 
   readScreenMode("configs.txt",images.icon)
 

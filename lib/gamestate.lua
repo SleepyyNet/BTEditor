@@ -40,6 +40,7 @@ function GS.new()
 		draw             = __NULL__,
 		focus            = __NULL__,
 		keyreleased      = __NULL__,
+		textinput        = __NULL__,
 		keypressed       = __NULL__,
 		mousepressed     = __NULL__,
 		mousereleased    = __NULL__,
@@ -65,6 +66,7 @@ local registry = setmetatable({}, {__index = function() return __NULL__ end})
 
 local all_callbacks = {
 	'update', 'draw', 'focus', 'keypressed', 'keyreleased',
+    'textinput',
 	'mousepressed', 'mousereleased', 'joystickpressed',
 	'joystickreleased', 'quit'
 }

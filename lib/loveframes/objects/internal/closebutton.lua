@@ -1,24 +1,25 @@
 --[[------------------------------------------------
 	-- Love Frames - A GUI library for LOVE --
-	-- Copyright (c) 2012 Kenny Shields --
+	-- Copyright (c) 2012-2014 Kenny Shields --
 --]]------------------------------------------------
 
 -- closebutton class
-closebutton = class("closebutton", base)
+local newobject = loveframes.NewObject("closebutton", "loveframes_object_closebutton", true)
 
 --[[---------------------------------------------------------
 	- func: initialize()
 	- desc: initializes the object
 --]]---------------------------------------------------------
-function closebutton:initialize()
+function newobject:initialize()
 
-	self.type           = "closebutton"
-	self.width          = 80
-	self.height         = 25
-	self.internal       = true
-	self.hover          = false
-	self.down           = false
-	self.OnClick        = function() end
+	self.type = "closebutton"
+	self.width = 16
+	self.height = 16
+	self.internal = true
+	self.hover = false
+	self.down = false
+	self.autoposition = true
+	self.OnClick = function() end
 	
 	-- apply template properties to the object
 	loveframes.templates.ApplyToObject(self)
@@ -29,9 +30,9 @@ end
 	- func: update(deltatime)
 	- desc: updates the object
 --]]---------------------------------------------------------
-function closebutton:update(dt)
+function newobject:update(dt)
 	
-	local visible      = self.visible
+	local visible = self.visible
 	local alwaysupdate = self.alwaysupdate
 	
 	if not visible then
@@ -42,23 +43,28 @@ function closebutton:update(dt)
 	
 	self:CheckHover()
 	
-	local hover       = self.hover
-	local down        = self.down
-	local hoverobject = loveframes.hoverobject
-	local parent      = self.parent
-	local base        = loveframes.base
-	local update      = self.Update
+	local hover = self.hover
+	local down = self.down
+	local downobject = loveframes.downobject
+	local parent = self.parent
+	local base = loveframes.base
+	local update = self.Update
 	
 	if not hover then
 		self.down = false
 	else
-		if loveframes.hoverobject == self then
+		if loveframes.downobject == self then
 			self.down = true
 		end
 	end
 	
-	if not down and hoverobject == self then
+	if not down and downobject == self then
 		self.hover = true
+	end
+	
+	if self.autoposition then
+		self.staticx = self.parent.width - self.width - 4
+		self.staticy = 4
 	end
 	
 	-- move to parent if there is a parent
@@ -77,7 +83,7 @@ end
 	- func: draw()
 	- desc: draws the object
 --]]---------------------------------------------------------
-function closebutton:draw()
+function newobject:draw()
 	
 	local visible = self.visible
 	
@@ -85,13 +91,13 @@ function closebutton:draw()
 		return
 	end
 	
-	local skins         = loveframes.skins.available
-	local skinindex     = loveframes.config["ACTIVESKIN"]
-	local defaultskin   = loveframes.config["DEFAULTSKIN"]
-	local selfskin      = self.skin
-	local skin          = skins[selfskin] or skins[skinindex]
-	local drawfunc      = skin.DrawCloseButton or skins[defaultskin].DrawCloseButton
-	local draw          = self.Draw
+	local skins = loveframes.skins.available
+	local skinindex = loveframes.config["ACTIVESKIN"]
+	local defaultskin = loveframes.config["DEFAULTSKIN"]
+	local selfskin = self.skin
+	local skin = skins[selfskin] or skins[skinindex]
+	local drawfunc = skin.DrawCloseButton or skins[defaultskin].DrawCloseButton
+	local draw = self.Draw
 	
 	-- set the object's draw order
 	self:SetDrawOrder()
@@ -108,7 +114,7 @@ end
 	- func: mousepressed(x, y, button)
 	- desc: called when the player presses a mouse button
 --]]---------------------------------------------------------
-function closebutton:mousepressed(x, y, button)
+function newobject:mousepressed(x, y, button)
 	
 	local visible = self.visible
 	
@@ -119,16 +125,12 @@ function closebutton:mousepressed(x, y, button)
 	local hover = self.hover
 	
 	if hover and button == "l" then
-	
 		local baseparent = self:GetBaseParent()
-	
 		if baseparent and baseparent.type == "frame" then
 			baseparent:MakeTop()
 		end
-		
 		self.down = true
-		loveframes.hoverobject = self
-		
+		loveframes.downobject = self
 	end
 	
 end
@@ -137,7 +139,7 @@ end
 	- func: mousereleased(x, y, button)
 	- desc: called when the player releases a mouse button
 --]]---------------------------------------------------------
-function closebutton:mousereleased(x, y, button)
+function newobject:mousereleased(x, y, button)
 	
 	local visible = self.visible
 	
@@ -145,17 +147,37 @@ function closebutton:mousereleased(x, y, button)
 		return
 	end
 	
-	local hover   = self.hover
+	local hover = self.hover
 	local onclick = self.OnClick
 	
 	if hover and self.down then
-	
 		if button == "l" then
 			onclick(x, y, self)
 		end
-		
 	end
 	
 	self.down = false
 
+end
+
+--[[---------------------------------------------------------
+	- func: SetAutoPosition(bool)
+	- desc: sets whether or not the object should be 
+			positioned automatically
+--]]---------------------------------------------------------
+function newobject:SetAutoPosition(bool)
+
+	self.autoposition = bool
+	
+end
+
+--[[---------------------------------------------------------
+	- func: GetAutoPosition()
+	- desc: gets whether or not the object should be 
+			positioned automatically
+--]]---------------------------------------------------------
+function newobject:GetAutoPosition()
+
+	return self.autoposition
+	
 end

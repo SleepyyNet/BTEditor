@@ -241,21 +241,20 @@ function split(str, delim, maxNb)
 end
 
 function getScreenMode()
-  _G.screen_width, _G.screen_height, _G.screen_fullscreen, _G.screen_vsync, _G.screen_fsaa = love.graphics.getMode( )
+  _G.screen_width, _G.screen_height, _G.screen_flags = love.window.getMode( )
   _G.screen_middlex=_G.screen_width/2
   _G.screen_middley=_G.screen_height/2
   -- graphics features supported
   _G.canvas_supported = love.graphics.isSupported("canvas")
-  _G.pixeleffect_supported = love.graphics.isSupported("pixeleffect")
   _G.npot_supported = love.graphics.isSupported("npot")
   _G.subtractive_supported = love.graphics.isSupported("subtractive")
 end
 
 function changeScreenMode(ptable,picon)
   if ptable then
-    local _b = love.graphics.setMode( ptable.width, ptable.height, ptable.fullscreen, ptable.vsync, ptable.fsaa )
+    local _b = love.window.setMode( ptable.width, ptable.height, ptable.flags )
     if picon then
-      love.graphics.setIcon( picon )
+      love.window.setIcon( picon:getData() )
     end
     return _b
   else
@@ -281,7 +280,7 @@ end
 
 function saveScreenMode(pfile)
   _table = {}
-  _table.width, _table.height, _table.fullscreen,_table.vsync, _table.fsaa = love.graphics.getMode( )
+  _table.width, _table.height, _table.flags = love.window.getMode( )
   if pfile then
     return love.filesystem.write(pfile,json.encode(_table))
   else

@@ -492,7 +492,7 @@ function state:draw()
 
 end
 
-function state:keypressed(key, unicode)
+function state:keypressed(key, isrepeat)
   if key=="lctrl" then
     loveframes.config["DEBUG"]=not loveframes.config["DEBUG"]
   end
@@ -548,7 +548,7 @@ function state:keypressed(key, unicode)
 
   end
 
-  loveframes.keypressed(key, unicode)
+  loveframes.keypressed(key, isrepeat)
 
 end
 
@@ -649,6 +649,15 @@ function state:keyreleased(key)
   end
 
   loveframes.keyreleased(key)
+
+end
+
+function state:textinput(text)
+
+  if EDITOR.inputenabled then
+  end
+
+  loveframes.textinput(text)
 
 end
 
@@ -893,7 +902,7 @@ function state.createDialogOptions()
 
     object = loveframes.Create("multichoice",frame)
     object:SetPos(100, 45)
-    local _modes=love.graphics.getModes()
+    local _modes=love.window.getFullscreenModes()
     table.sort(_modes, function(a, b) return a.width*a.height < b.width*b.height end)
     local _values={}
     local _value=_G.screen_width.."x".._G.screen_height
@@ -1845,10 +1854,11 @@ function state:drawNodesEvaluated()
     for i,v in ipairs(EDITOR.btlua.nodesEvaluated) do
       _node = EDITOR.nodekeys[v.id]
       if i>1 and _prevnode~=_node then
-        love.graphics.setLine(4,"smooth")
+        love.graphics.setLineStyle("smooth")
+        love.graphics.setLineWidth(4)
         love.graphics.setColor(0,0,0,255)
         EDITOR.drawArrow(_prevnode.x+_prevnode.width/2+_prev.offset*13,_prevnode.y+_prevnode.height/2,_node.x+_node.width/2+v.offset*13,_node.y+_node.height/2,EDITOR.arrowsize*2)
-        love.graphics.setLine(2,"smooth")
+        love.graphics.setLineWidth(2)
         love.graphics.setColor(255,255,255,255)
         EDITOR.drawArrow(_prevnode.x+_prevnode.width/2+_prev.offset*13,_prevnode.y+_prevnode.height/2,_node.x+_node.width/2+v.offset*13,_node.y+_node.height/2,EDITOR.arrowsize*2)
       end
@@ -1873,7 +1883,7 @@ function state:drawNodesEvaluated()
       _prev = v
     end
   end
-  love.graphics.setLine(1,"smooth")
+  love.graphics.setLineWidth(1)
 end
 
 function state:updateNodesEvaluated()

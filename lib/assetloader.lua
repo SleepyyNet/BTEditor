@@ -9,7 +9,7 @@ assetloader.assets =  {}
 -- @param func func to call for every file
 function loadfromdir(targettable, path, extension, func)
   local extmatch = "%." .. extension .. "$"
-  for i, v in ipairs(love.filesystem.enumerate(path)) do
+  for i, v in ipairs(love.filesystem.getDirectoryItems(path)) do
     if love.filesystem.isDirectory(path .. "/" .. v) then
       targettable[v] = {}
       loadfromdir(targettable[v], path .. "/" .. v, extension, func)
